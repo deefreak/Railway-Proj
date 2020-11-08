@@ -52,13 +52,19 @@ function register(){
             header('location: admin/home.php');        
         }
         else{
-            $query = "INSERT INTO bookingagents(name,creditCard,address,username,emailID,password,user_type)
-                     values('$name','$creditCard','$address','$username','$email','$password','user'  )";
-            mysqli_query($db,$query);
-            $logged_in_user_id = mysqli_insert_id($db);
-            $_SESSION['user'] = getUserById($logged_in_user_id);
-            $SESSION['success'] = "You are now logged in";
-            header('location: welcome.php');        
+			$username_check = mysqli_query($db,"SELECT * from bookingagents where username='$username' or emailID='$email'");
+			if(mysqli_num_rows($username_check)>=1){
+				array_push($errors,"Username or Email Already Exists.");
+			}
+			else{	
+				$query = "INSERT INTO bookingagents(name,creditCard,address,username,emailID,password,user_type)
+						values('$name','$creditCard','$address','$username','$email','$password','user'  )";
+				mysqli_query($db,$query);
+				$logged_in_user_id = mysqli_insert_id($db);
+				$_SESSION['user'] = getUserById($logged_in_user_id);
+				$SESSION['success'] = "You are now logged in";
+				header('location: welcome.php'); 
+			}	       
         }
     }
 
@@ -159,15 +165,63 @@ if(isset($_POST['insert_train_btn'])){
 }
 
 function insert_train(){
-	global $db;
+	global $db,$errors;
 	$trainno = e($_POST['trainno']);;
 	$trainname = e($_POST['trainname']);
+	$call = mysqli_prepare($db,'CALL insert_new_train(?,?,@result)');
+	mysqli_stmt_bind_param($call,'is',$trainno,$trainname);
+	mysqli_stmt_execute($call);
 
-	$query = "INSERT INTO trains(trainno,name) values
-				('$trainno','$trainname')";
-	mysqli_query($db,$query);
+	$res = mysqli_query($db,'Select @result');
+	$output = mysqli_fetch_assoc($res);
 
-	header('location: insert_new_train.php');			
+	$ans = $output['@result']; 
+	if($ans!=0){
+		header('location: insert_new_train.php');		
+	}
+	else{
+		array_push($errors,"Train with Given Number Already Exists");
+	}
+}
+
+if(isset($_POST['schedule_train_btn'])){
+	schedule_train();
+}
+
+function schedule_train(){
+	global $db,$errors;
+	$trainno = e($_POST['trainno']);
+	$trainname="";
+	$sql = "SELECT name from trains where trainno='$trainno'";
+	$result = mysqli_query($db,$sql);
+	if(mysqli_num_rows($result)==1){
+		$row = mysqli_fetch_assoc($result);
+		$trainname = $row["name"];
+	}
+	else{
+		$trainname = "dummy";
+	}
+	$doj = date('Y-m-d',strtotime($_POST['date']));
+	/*$trainname = e($_POST['trainname']);*/
+	$ac_coaches = e($_POST['acCoaches']);
+	$sl_coaches = e($_POST['sleeperCoaches']);
+	$ac_seats_left = $ac_coaches*18;
+	$sl_seats_left = $sl_coaches*24;
+	$call = mysqli_prepare($db,'CALL schedule_train(?,?,?,?,?,@result)');
+	mysqli_stmt_bind_param($call,'issii',$trainno,$doj,$trainname,$ac_seats_left,$sl_seats_left);
+	mysqli_stmt_execute($call);
+
+	$res = mysqli_query($db,'Select @result');
+	$output = mysqli_fetch_assoc($res);
+
+	$ans = $output['@result']; 
+	if($ans!=0){
+		header('location: schedule.php');		
+	}
+	else{
+		array_push($errors,"Train with Given Number Does Not Exists");
+	}
+
 }
 
 ?>
