@@ -30,7 +30,6 @@
 		<?php endif ?>
 		<!-- logged in user information -->
 		<div class="profile_info">
-			<img src="images/user_profile.png"  >
 
 			<div>
 				<?php  if (isset($_SESSION['user'])) : ?>
@@ -45,6 +44,13 @@
 				<?php endif ?>
 			</div>
 		</div>
+		<div align="CENTER" >
+			<div>
+			<h2 style="font-style: italic;"><br><a href="http://localhost/proj1/check_availability.php">Book a New Ticket</a><br>
+			<br><a href="http://localhost/proj1/show_past_bookings.php">Show all Past Bookings</a><br>
+			</h2>
+			</div>
+		</div>	
 	</div>
 	
 </body>
