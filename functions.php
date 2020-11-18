@@ -108,7 +108,7 @@ function isLoggedIn()
 if(isset($_GET['logout'])){
     session_destroy();
     unset($_SESSION['user']);
-    header('location: login.php');
+    header('location: index.php');
 }
 
 if(isset($_POST['login_btn'])){
@@ -160,6 +160,15 @@ function isAdmin()
 	}
 }
 
+function isUser(){
+	if(isset($_SESSION['user']) && $_SESSION['user']['user_type'] == 'user'){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
 if(isset($_POST['insert_train_btn'])){
 	insert_train();
 }
@@ -202,6 +211,7 @@ function schedule_train(){
 		$trainname = "dummy";
 	}
 	$doj = date('Y-m-d',strtotime($_POST['date']));
+	$doj1= date('Ymd',strtotime($_POST['date']));
 	/*$trainname = e($_POST['trainname']);*/
 	$ac_coaches = e($_POST['acCoaches']);
 	$sl_coaches = e($_POST['sleeperCoaches']);
@@ -215,13 +225,178 @@ function schedule_train(){
 	$output = mysqli_fetch_assoc($res);
 
 	$ans = $output['@result']; 
-	if($ans!=0){
-		header('location: schedule.php');		
+	if($ans==1){
+		$ticket = "ticket";
+		$table_name = $ticket.$trainno.$doj1;
+		$sql = "CREATE Table $table_name ( 
+				`pnr` varchar(30) NOT NULL,
+				`trainNo` int(11) NOT NULL,
+				`doj` int(11) NOT NULL,
+				`name` varchar(20) NOT NULL,
+				`berth no` int(11) NOT NULL,
+				`berth type` varchar(2) NOT NULL,
+				`coach no` varchar(4) NOT NULL,
+				`age` int(11) NOT NULL,
+				`gender` varchar(7) NOT NULL
+			)";
+		mysqli_query($db,$sql);	
+		$_SESSION['success'] = "Train Scheduled Successfully";
+		header('location: home.php');		
 	}
-	else{
+	elseif($ans==0){
 		array_push($errors,"Train with Given Number Does Not Exists");
 	}
+	elseif($ans==2){
+		array_push($errors,"Please Schedule in the Limit of 2 to 4 months");
+	}
 
+}
+
+if(isset($_POST['check_availability_btn'])){
+	check_availibility();
+}
+
+
+function check_availibility(){
+	global $db,$errors;
+	$no_of_pass = e($_POST['no_of_pass']);
+	$username = $_SESSION['user']['username'];
+	$train_number = e($_POST['train_number']);
+	$doj = date('Y-m-d',strtotime($_POST['doj']));
+	$class = e($_POST['class']);
+	$call = mysqli_prepare($db,'CALL check_availability(?,?,?,?,@result,@value)');
+	mysqli_stmt_bind_param($call,'issi',$train_number,$doj,$class,$no_of_pass);
+	mysqli_stmt_execute($call);
+
+	$res = mysqli_query($db,'Select @result,@value');
+	$output = mysqli_fetch_assoc($res);
+
+	$ans1 = $output['@result'];
+	$ans2 = $output['@value'];
+	if($ans1 == 1){
+		$_SESSION['train_number'] = $train_number;
+		$_SESSION['doj'] = $doj;
+		$_SESSION['no_of_pass'] = $no_of_pass;
+		$_SESSION['class'] = $class;
+		header('location: book_ticket.php');
+	}
+	elseif($ans1 == 0){
+		if($ans2==0){
+			array_push($errors,"Train Not available");
+		}
+		elseif($ans2 == 1){
+			array_push($errors,"Required AC seats not left");
+		}
+		elseif($ans2 == 2){
+			array_push($errors,"Required Sleeper Seats not left");
+		}
+	}
+
+}
+
+if(isset($_POST['book_ticket_btn'])){
+	book_ticket();
+}
+
+function book_ticket(){
+	global $db,$errors;
+	$pnr = "";
+	$pnr = date("Ymdhis");
+	$berth_no = array();
+	$berth_type = array();
+	$coach = array();
+	$passenger_name = array();
+	$passenger_age = array();
+	$passenger_gender = array();
+	$train_number = $_SESSION['train_number'];
+	$username = $_SESSION['user']['username'];
+	$doj = $_SESSION['doj'];
+	$doj1 = str_replace('-','',$doj);
+	echo $doj1;
+	$no_of_pass = $_SESSION['no_of_pass'];
+	$class = $_SESSION['class'];
+	$seats_left = "";
+	$coach_no="";
+	$eq_birth_no="";
+	for($i=0;$i<$no_of_pass;$i++){
+		$passenger_name[$i] = e($_POST['passenger_name'][$i]);
+		$passenger_age[$i] =  e($_POST['passenger_age'][$i]);
+		$passenger_gender[$i] =  e($_POST['passenger_gender'][$i]);
+	}
+	$sql = "SELECT * from trainsavailable where trainno='$train_number' and doj='$doj'";
+	$ticket = "ticket";
+	$ticket_table_name = $ticket.$train_number.$doj1;
+	$result = mysqli_query($db,$sql);
+	if(mysqli_num_rows($result) == 1){
+		$row = mysqli_fetch_assoc($result);
+		if($class == 'AC'){
+			$seats_left = $row["AcSeatsLeft"];
+			for($i=0;$i<$no_of_pass;$i++){
+				array_push($berth_no,$seats_left);
+				if($seats_left%18 == 0){
+					$coach_no = $seats_left/18;
+					$coach_no = "AC".$coach_no;
+					$eq_birth_no = 18;
+				}
+				else{
+					$eq_birth_no = $seats_left%18;
+					$coach_no = floor($seats_left/18) + 1;
+					$coach_no = "AC".$coach_no;
+				}
+				array_push($coach,$coach_no);
+				$sql1 = "SELECT * from berth where classType='$class' and birthNo='$eq_birth_no'";
+				$result1 = mysqli_query($db,$sql1);
+				$row1 = mysqli_fetch_assoc($result1);
+				$type_of_birth = $row1["birthType"];
+				array_push($berth_type,$type_of_birth);
+				$seats_left = $seats_left-1;
+
+			}
+			$sql2 = "UPDATE trainsavailable set AcSeatsLeft = AcSeatsLeft - '$no_of_pass' where trainno='$train_number' and doj='$doj' ";
+			mysqli_query($db,$sql2);
+			print_r($berth_no);
+			print_r($coach);
+			print_r($berth_type);
+		}
+		else{
+			$seats_left = $row["SlSeatsLeft"];
+			for($i=0;$i<$no_of_pass;$i++){
+				array_push($berth_no,$seats_left);
+				if($seats_left%24 == 0){
+					$coach_no = $seats_left/24;
+					$eq_birth_no = 24;
+					$coach_no = "SL".$coach_no;
+				}
+				else{
+					$eq_birth_no = $seats_left%24;
+					$coach_no = floor($seats_left/24) + 1;
+					$coach_no = "SL".$coach_no;
+				}
+				array_push($coach,$coach_no);
+				$sql2 = "SELECT * from berth where classType='SL' and birthNo='$eq_birth_no'";
+				$result2 = mysqli_query($db,$sql2);
+				$row2 = mysqli_fetch_assoc($result2);
+				$type_of_birth = $row2["birthType"];
+				array_push($berth_type,$type_of_birth);
+				$seats_left = $seats_left-1;
+
+			}
+			$sql2 = "UPDATE trainsavailable set SlSeatsLeft = SlSeatsLeft - '$no_of_pass' where trainno='$train_number' and doj='$doj' ";
+			mysqli_query($db,$sql2);
+			print_r($berth_no);
+			print_r($coach);
+			print_r($berth_type);
+		}
+		for($i=0;$i<$no_of_pass;$i++){
+			$sql = "INSERT into $ticket_table_name Values('$pnr','$train_number','$doj','$passenger_name[$i]','$berth_no[$i]','$berth_type[$i]',
+					'$coach[$i]','$passenger_age[$i]','$passenger_gender[$i]')";
+			mysqli_query($db,$sql);
+
+		}
+		$sql = "INSERT into bookinghistory values('$username','$train_number','$doj','$pnr')";
+		mysqli_query($db,$sql);
+		unset($_SESSION['train_number']);
+	}
 }
 
 ?>
