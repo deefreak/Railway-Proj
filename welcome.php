@@ -12,6 +12,9 @@
 	<title>Home</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
+<style type="text/css">
+   body { background-image: url('https://images.unsplash.com/photo-1535535112387-56ffe8db21ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80') !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+</style>
 <body>
 	<div class="header">
 		<h2>Home Page</h2>
