@@ -5,11 +5,6 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
 <body>
-<div align='CENTER'>
-    <h2>
-        List of All Booking Agents
-    </h2>
-</div>
 <?php
     include('../functions.php');
 
@@ -19,16 +14,35 @@ if (!isAdmin()) {
 	header('location: ../login.php');
 }
 
-$query = "SELECT * from bookingagents where user_type!='admin'";
+
+$ticket_table_name = $_SESSION['ticket_table_name'];
+
+$train_number = $_SESSION['train_number1'];
+$doj = $_SESSION['doj1'];
+
+?>
+
+<div align='CENTER'>
+    <h2>
+        Tickets For Train No. <?php echo $train_number?> and DOJ <?php echo $doj?>
+    </h2>
+</div>
+
+<?php
+
+$query = "SELECT * from  $ticket_table_name ";
 $result = mysqli_query($db,$query);
 
 echo "<table class='table table-striped'>
 <thead class='thead-dark'>
 <tr>
-<th scope='col'>Name</th>
-<th scope='col'>Username</th>
-<th scope='col'>Email Id</th>
-<th scope='col'>Address</th>
+<th scope='col'>pnr</th>
+<th scope='col'>Passenger Name</th>
+<th scope='col'>Age</th>
+<th scope='col'>Gender</th>
+<th scope='col'>Berth No.</th>
+<th scope='col'>Berth Type</th>
+<th scope='col'>Coach No.</th>
 </tr>
 </thead>
 <tbody>";
@@ -36,10 +50,13 @@ echo "<table class='table table-striped'>
 while($row = mysqli_fetch_array($result)){
     echo "
     <tr>	
-	<td>".$row[1]."</td>
-	<td>".$row[4]."</td>
+	<td>".$row[0]."</td>
+	<td>".$row[3]."</td>
+    <td>".$row[7]."</td>
+    <td>".$row[8]."</td>
+    <td>".$row[4]."</td>
     <td>".$row[5]."</td>
-    <td>".$row[3]."</td>
+    <td>".$row[6]."</td>
 	</tr>";
 }
 

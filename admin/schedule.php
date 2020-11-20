@@ -12,34 +12,49 @@ if (!isAdmin()) {
 <html>
 	<head>
 		<link rel="stylesheet" href="../style.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	</head>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand"><?php echo $_SESSION['user']['name'];?></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="home.php"> Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="schedule.php">Schedule Train</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link " href="insert_new_train.php">Insert a Train</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<style type="text/css">
+   body { background-image: url('https://images.unsplash.com/photo-1535535112387-56ffe8db21ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80') !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+</style>	
 <body>
-<div align="CENTER">
-<h2> List of all Trains </h2>
-</div>
-<?php
-$query = "SELECT * from trains";
-$result = mysqli_query($db,$query);
-echo "<table style='width:40%;margin-left:auto;margin-right:auto'>
-<thead style='border:1px solid black'><td style='border:1px solid black'>Id</td><td style='border:1px solid black'>Train_Number</td><td style='border:1px solid black'>Train_Name</td></thead>
-";
-
-while($row = mysqli_fetch_array($result)){
-    echo "
-<tr style='border:1px solid black'><td style='border:1px solid black'>".$row[0]."</td><td style='border:1px solid black'>".$row[1]."</td><td style='border:1px solid black'>".$row[2]."</td></tr>
-";
-}
-
-echo "</table>";
-
-
-?>
 
 <div class="header">
 	<h2>Schedule Train</h2>
 </div>
-<form method="post" action="insert_new_train.php">
+<form method="post" action="schedule.php">
     <?php echo display_error(); ?>
+
+	<?php if (isset($_SESSION['success'])) : ?>
+			<div class="error success" >
+				<h3>
+					<?php 
+						echo $_SESSION['success']; 
+						unset($_SESSION['success']);
+					?>
+				</h3>
+			</div>
+	<?php endif ?>
     <div class="input-group">
 		<label>Train Number</label>
 		<input type="text" name="trainno" value="">
@@ -88,6 +103,7 @@ echo "</table>";
 	</p>
 </form>
 </body>
+
 </html>
 
 
