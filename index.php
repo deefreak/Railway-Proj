@@ -23,11 +23,11 @@ Released   : 20081009
 <body>
    <div id="page">
        <div class="topNaviagationLink" ><a href="index.php">Home</a></div>
-       <div class="topNaviagationLink"><a href="http://localhost/proj1/login.php">About</a></div>
-       <div class="topNaviagationLink"><a href="http://localhost/proj1/login.php">User Login</a></div>
-       <div class="topNaviagationLink"><a href="http://localhost/proj1/register.php">Register</a></div>
-       <div class="topNaviagationLink"><a href="http://localhost/proj1/login.php">Admin Login</a></div>
-       <div class="topNaviagationLink"><a href="http://localhost/proj1/contact.php">Contact Us!</a></div>
+       <div class="topNaviagationLink"><a href="login.php">About</a></div>
+       <div class="topNaviagationLink"><a href="login.php">User Login</a></div>
+       <div class="topNaviagationLink"><a href="register.php">Register</a></div>
+       <div class="topNaviagationLink"><a href="login.php">Admin Login</a></div>
+       <div class="topNaviagationLink"><a href="contact.php">Contact Us!</a></div>
      <!-- <div class="topNaviagationLink"><a href="index.html">Contact</a></div> -->
  </div>
    <div id="mainPicture">

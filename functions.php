@@ -10,7 +10,9 @@ $email    = "";
 $name     = "";
 $address  = "";
 $creditcard = "";
-$errors   = array(); 
+$errors   = array();
+$errors1  = array();
+$success = array();
 
 if(isset($_POST['register_btn'])){
     register();
@@ -90,6 +92,28 @@ function display_error(){
     if (count($errors) > 0){
 		echo '<div class="error">';
 			foreach ($errors as $error){
+				echo $error .'<br>';
+			}
+		echo '</div>';
+	}
+}
+
+function display_success(){
+    global $success;
+    if (count($success) > 0){
+		echo '<div class="success">';
+			foreach ($success as $error){
+				echo $error .'<br>';
+			}
+		echo '</div>';
+	}
+}
+
+function display_error1(){
+    global $errors1;
+    if (count($errors1) > 0){
+		echo '<div class="error">';
+			foreach ($errors1 as $error){
 				echo $error .'<br>';
 			}
 		echo '</div>';
@@ -176,7 +200,7 @@ if(isset($_POST['insert_train_btn'])){
 }
 
 function insert_train(){
-	global $db,$errors;
+	global $db,$errors,$success;
 	$trainno = e($_POST['trainno']);;
 	$trainname = e($_POST['trainname']);
 	$call = mysqli_prepare($db,'CALL insert_new_train(?,?,@result)');
@@ -188,7 +212,7 @@ function insert_train(){
 
 	$ans = $output['@result']; 
 	if($ans!=0){
-		header('location: insert_new_train.php');		
+		array_push($success,"Train Successfully Inserted");		
 	}
 	else{
 		array_push($errors,"Train with Given Number Already Exists");
@@ -200,7 +224,7 @@ if(isset($_POST['schedule_train_btn'])){
 }
 
 function schedule_train(){
-	global $db,$errors;
+	global $db,$errors,$success;
 	$trainno = e($_POST['trainno']);
 	$trainname="";
 	$sql = "SELECT name from trains where trainno='$trainno'";
@@ -219,8 +243,8 @@ function schedule_train(){
 	$sl_coaches = e($_POST['sleeperCoaches']);
 	$ac_seats_left = $ac_coaches*18;
 	$sl_seats_left = $sl_coaches*24;
-	$call = mysqli_prepare($db,'CALL schedule_train(?,?,?,?,?,@result)');
-	mysqli_stmt_bind_param($call,'issii',$trainno,$doj,$trainname,$ac_seats_left,$sl_seats_left);
+	$call = mysqli_prepare($db,'CALL schedule_train(?,?,?,?,?,@result,?,?)');
+	mysqli_stmt_bind_param($call,'issiiii',$trainno,$doj,$trainname,$ac_seats_left,$sl_seats_left,$ac_coaches,$sl_coaches);
 	mysqli_stmt_execute($call);
 
 	$res = mysqli_query($db,'Select @result');
@@ -239,11 +263,11 @@ function schedule_train(){
 				`berth type` varchar(2) NOT NULL,
 				`coach no` varchar(4) NOT NULL,
 				`age` int(11) NOT NULL,
-				`gender` varchar(7) NOT NULL
+				`gender` varchar(7) NOT NULL,
+				PRIMARY KEY( `berth no`, `coach no`)
 			)";
 		mysqli_query($db,$sql);	
-		$_SESSION['success'] = "Train Scheduled Successfully";
-		header('location: home.php');		
+		array_push($success,"Train Scheduled Successfully");	
 	}
 	elseif($ans==0){
 		array_push($errors,"Train with Given Number Does Not Exists");
@@ -327,7 +351,7 @@ if(isset($_POST['book_ticket_btn'])){
 }
 
 function book_ticket(){
-	global $db,$errors;
+	global $db,$errors,$success;
 	$pnr = "";
 	$pnr = date("Ymdhis");
 	$berth_no = array();
@@ -340,7 +364,6 @@ function book_ticket(){
 	$username = $_SESSION['user']['username'];
 	$doj = $_SESSION['doj'];
 	$doj1 = str_replace('-','',$doj);
-	echo $doj1;
 	$no_of_pass = $_SESSION['no_of_pass'];
 	$class = $_SESSION['class'];
 	$seats_left = "";
@@ -387,9 +410,6 @@ function book_ticket(){
 			}
 			$sql2 = "UPDATE trainsavailable set AcSeatsLeft = AcSeatsLeft - '$no_of_pass' where trainno='$train_number' and doj='$doj' ";
 			mysqli_query($db,$sql2);
-			print_r($berth_no);
-			print_r($coach);
-			print_r($berth_type);
 		}
 		else{
 			$seats_left = $row["SlSeatsLeft"];
@@ -417,9 +437,6 @@ function book_ticket(){
 			}
 			$sql2 = "UPDATE trainsavailable set SlSeatsLeft = SlSeatsLeft - '$no_of_pass' where trainno='$train_number' and doj='$doj' ";
 			mysqli_query($db,$sql2);
-			print_r($berth_no);
-			print_r($coach);
-			print_r($berth_type);
 		}
 		for($i=0;$i<$no_of_pass;$i++){
 			$sql = "INSERT into $ticket_table_name Values('$pnr','$train_number','$doj','$passenger_name[$i]','$berth_no[$i]','$berth_type[$i]',
@@ -430,6 +447,45 @@ function book_ticket(){
 		$sql = "INSERT into bookinghistory values('$username','$train_number','$train_name','$doj','$pnr')";
 		mysqli_query($db,$sql);
 		unset($_SESSION['train_number']);
+		array_push($success,"Ticket Booked Successfully");
+	}
+}
+
+if(isset($_POST['see_train_btn'])){
+	see_train();
+}
+
+function see_train(){
+	global $db,$errors;
+	$train_no = e($_POST['train_number']);
+	$sql = "SELECT * from trainsavailable where trainno = '$train_no' ";
+	$result = mysqli_query($db,$sql);
+
+	if(mysqli_num_rows($result) != 0){
+		$_SESSION['train_number'] = $train_no;
+		header('location: see_train.php');
+	}
+	else{
+		array_push($errors,"Train Not Available");
+	}
+}
+
+if(isset($_POST['see_pnr_btn'])){
+	see_pnr();
+}
+
+function see_pnr(){
+	global $db,$errors1;
+	$pnr = e($_POST['pnr']);
+	$sql = "SELECT * from bookinghistory where pnr = '$pnr' ";
+	$result = mysqli_query($db,$sql);
+
+	if(mysqli_num_rows($result) == 1){
+		$_SESSION['pnr'] = $pnr;
+		header('location: see_pnr.php');
+	}
+	else{
+		array_push($errors1,"PNR Not Available");
 	}
 }
 

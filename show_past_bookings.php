@@ -35,6 +35,9 @@
       <li class="nav-item active">
         <a class="nav-link " href="show_past_bookings.php">Show Past Bookings</a>
       </li>
+      <li class="nav-item active">
+	  <a class="nav-link" href="index.php?logout='1'" style="color: red;">logout</a>
+      </li>
     </ul>
   </div>
 </nav>

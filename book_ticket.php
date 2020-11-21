@@ -43,6 +43,9 @@ $no_of_pass = $_SESSION['no_of_pass'];
       <li class="nav-item active">
         <a class="nav-link " href="show_past_bookings.php">Show Past Bookings</a>
       </li>
+      <li class="nav-item active">
+	  <a class="nav-link" href="index.php?logout='1'" style="color: red;">logout</a>
+      </li>
     </ul>
   </div>
 </nav>
@@ -51,6 +54,7 @@ $no_of_pass = $_SESSION['no_of_pass'];
 </div>
 <form method="post" action="book_ticket.php">
     <?php echo display_error(); ?>
+    <?php echo display_success(); ?>
     <?php for($i=0;$i<$no_of_pass;$i++){ ?>
         <div class="input-group">
             <label>Passenger<?php echo $i+1?> Details</label>

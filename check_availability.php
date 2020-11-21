@@ -35,6 +35,9 @@ if(!isUSer()){
       </li>
       <li class="nav-item active">
         <a class="nav-link " href="show_past_bookings.php">Show Past Bookings</a>
+	  </li>
+	  <li class="nav-item active">
+	  <a class="nav-link" href="index.php?logout='1'" style="color: red;">logout</a>
       </li>
     </ul>
   </div>
@@ -43,7 +46,8 @@ if(!isUSer()){
 	<h2>Book Ticket</h2>
 </div>
 <form method="post" action="check_availability.php">
-    <?php echo display_error(); ?>
+	<?php echo display_error(); ?>
+	<?php echo display_success(); ?>
     <div class="input-group">
 		<label>Train Number</label>
 		<input type="text" name="train_number" value="" required>
