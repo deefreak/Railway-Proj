@@ -18,7 +18,7 @@ echo "<div class='container'>";
 echo "<table class='table table-striped'>
 <thead class='thead-dark'>
 <tr>
-<th scope='col'>Train_Id</th>
+
 <th scope='col'>Train_Number</th>
 <th scope='col'>Train_Name</th>
 </tr>
@@ -31,7 +31,7 @@ while($row = mysqli_fetch_array($result)){
 	<tr>	
 	<td>".$row[0]."</td>
 	<td>".$row[1]."</td>
-	<td>".$row[2]."</td>
+	
 	</tr>
 
 	";
@@ -40,7 +40,9 @@ while($row = mysqli_fetch_array($result)){
 echo "</tbody>
 </table>
 </div>";
-
+echo '<p style="color:blue;font-size:25px;"><center>
+		<a href="admin/home.php">Back to main page</a>
+	</p>';
 
 ?>
 </body>

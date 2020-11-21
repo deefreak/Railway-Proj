@@ -202,7 +202,7 @@ if(isset($_POST['insert_train_btn'])){
 
 function insert_train(){
 	global $db,$errors,$success;
-	$trainno = e($_POST['trainno']);;
+	$trainno = e($_POST['trainno']);
 	$trainname = e($_POST['trainname']);
 	$call = mysqli_prepare($db,'CALL insert_new_train(?,?,@result)');
 	mysqli_stmt_bind_param($call,'is',$trainno,$trainname);
@@ -300,7 +300,14 @@ function show_tickets(){
 		header('location: show_tickets.php');
 	}
 	else{
-		array_push($errors,"Not Available");
+        $sql = "SELECT * from trainsavailable where trainno='$train_number' and doj='$doj'";
+	   $result = mysqli_query($db,$sql);
+        if(mysqli_num_rows($result) != 0){
+            array_push($errors,"No tickets to show");
+        }
+        else{
+		  array_push($errors,"No such train scheduled on the given date");
+        }
 	}
 }
 
@@ -312,7 +319,7 @@ if(isset($_POST['update_btn'])){
 //    $query="UPDATE Bookingagents SET name=$name,address=$address,email=$email where username=$username";
 }
 function update(){
-    global $db,$errors,$username,$email;
+    global $db,$errors,$username,$email,$success;
     $name = e($_POST['name']);
     $address = e($_POST['address']);
     $username    =  e($_POST['username']);
@@ -323,7 +330,10 @@ function update(){
     if(count($errors) == 0){
         $query = "UPDATE bookingagents SET name='$name',address='$address',emailID='$email' where username='$username'";
         mysqli_query($db,$query);
+        array_push($success,"Profile successfully updated");
         $logged_in_user_id = mysqli_insert_id($db);
+        array_push($success,"Profile updated successfully");
+//        array_push($success,"Train Scheduled Successfully");
 //        $_SESSION['user'] = getUserById($logged_in_user_id);
         $SESSION['success'] = "You are now logged in";
         header('location: welcome.php');
@@ -357,8 +367,15 @@ function check_availibility(){
 	}
 	elseif($ans1 == 0){
 		if($ans2==0){
-			array_push($errors,"Train Not available");
-		}
+            $sql = "SELECT * from trains where trainno='$train_number'";
+	         $result = mysqli_query($db,$sql);
+            if(mysqli_num_rows($result) == 0){
+                array_push($errors,"No train with the given train no exists");
+            }
+            else{
+                    array_push($errors,"train is not available for the given journey date");
+                }
+            }
 		elseif($ans2 == 1){
 			array_push($errors,"Required AC seats not left");
 		}
@@ -489,7 +506,14 @@ function see_train(){
 		header('location: see_train.php');
 	}
 	else{
-		array_push($errors,"Train Not Available");
+        $sql = "SELECT * from trains where trainno = '$train_no' ";
+	   $result = mysqli_query($db,$sql);
+        if(mysqli_num_rows($result) != 0){
+           array_push($errors,"This train is not released for any future dates till now"); 
+        }
+        else{
+		  array_push($errors,"Train Not Available");
+        }
 	}
 }
 

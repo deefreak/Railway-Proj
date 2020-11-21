@@ -51,7 +51,7 @@ if (!isAdmin()) {
 	<?php echo display_success();?>
     <div class="input-group">
 		<label>Train Number</label>
-		<input type="text" name="trainno" value="">
+		<input type="number" name="trainno" value="">
 	</div>
     <div class="input-group">
 		<label>Train Name</label>

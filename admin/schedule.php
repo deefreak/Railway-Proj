@@ -60,12 +60,12 @@ if (!isAdmin()) {
 	<?php endif ?>
     <div class="input-group">
 		<label>Train Number</label>
-		<input type="text" name="trainno" value="">
+		<input type="number" name="trainno" value="" required>
 	</div>
     
 	<div class="input-group">
 		<label>Date of Journey</label>
-		<input type="date" name="date" value="">
+		<input type="date" name="date" value="" required>
 	</div>
 	<div class="input-group">
 		<label>Number of AC Coaches</label>

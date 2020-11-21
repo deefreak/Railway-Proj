@@ -64,6 +64,17 @@ form, .content {
 	border: none;
 	border-radius: 5px;
 }
+.clear {
+	padding: 10px;
+/*    margin-left: 200px;*/
+    margin-top: 0px;
+    margin-bottom: 0px;
+	font-size: 15px;
+	color: white;
+	background: #5F9EA0;
+	border: none;
+	border-radius: 5px;
+}
 .error {
 	width: 92%; 
 	margin: 0px auto; 

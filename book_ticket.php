@@ -53,6 +53,7 @@ $no_of_pass = $_SESSION['no_of_pass'];
 	<h2>Book Ticket</h2>
 </div>
 <form method="post" action="book_ticket.php">
+   
     <?php echo display_error(); ?>
     <?php echo display_success(); ?>
     <?php for($i=0;$i<$no_of_pass;$i++){ ?>

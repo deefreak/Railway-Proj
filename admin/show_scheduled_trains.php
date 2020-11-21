@@ -47,7 +47,9 @@ while($row = mysqli_fetch_array($result)){
 
 echo "</tbody>
 </table>";
-
+//echo '<p style="color:blue;font-size:18px;">
+//		<a href="../welcome.php">Back to main page</a>
+//	</p>';
 
 ?>
 </body>

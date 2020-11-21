@@ -31,6 +31,9 @@ if(!isUSer()){
         <a class="nav-link" href="welcome.php"> Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item active">
+        <a class="nav-link" href="update-prof.php">Update Profile</a>
+      </li>
+      <li class="nav-item active">
         <a class="nav-link" href="check_availability.php">Book Tickets</a>
       </li>
       <li class="nav-item active">
@@ -50,7 +53,7 @@ if(!isUSer()){
 	<?php echo display_success(); ?>
     <div class="input-group">
 		<label>Train Number</label>
-		<input type="text" name="train_number" value="" required>
+		<input type="number" name="train_number" value="" required>
 	</div>
     <div class="input-group">
 		<label>Date of Journey</label>
@@ -58,7 +61,7 @@ if(!isUSer()){
 	</div>
     <div class="input-group">
 		<label>Number Of Passengers</label>
-		<input type="text" name="no_of_pass" value="" required>
+		<input type="number" name="no_of_pass" value="" required>
 	</div>
 	<div class="input-group">
 		<label>Choose Class</label>

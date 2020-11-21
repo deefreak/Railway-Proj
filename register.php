@@ -45,7 +45,7 @@
 	</div>
     <div class="input-group">
 		<label>CreditCard</label>
-		<input type="text" name="creditcard" required value="<?php echo $creditcard; ?>">
+		<input type="number" name="creditcard" required value="<?php echo $creditcard; ?>">
 	</div>
     <div class="input-group">
 		<label>Address</label>

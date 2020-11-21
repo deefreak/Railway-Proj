@@ -88,7 +88,7 @@ while($row = mysqli_fetch_array($result)){
 
 echo "</tbody>
 </table>";
-echo "<br><a href='http://localhost/proj1/admin/home.php'>Back to Admin Page</a><br> ";
+echo "<br><a href='home.php'>Back to Admin Page</a><br> ";
 
 ?>
 </body>
