@@ -59,7 +59,7 @@ else{
 	</div>
 -->
 	<div class="input-group">
-		<button type="submit" class="btn" name="register_btn">Update</button>
+		<button type="submit" class="btn" name="update_btn">Update</button>
 	</div>
 <!--
 	<p>

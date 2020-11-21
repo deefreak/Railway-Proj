@@ -1,8 +1,9 @@
-<?php 
+<?php
 session_start();
 
 // connect to database
-$db = mysqli_connect('localhost', 'root', 'deepak', 'railwayproj');
+//$db = mysqli_connect('localhost', 'root', 'deepak', 'railwayproj');
+$db = mysqli_connect('localhost', 'Tanmay', '7376748947', 'reservation');
 
 // variable declaration
 $username = "";
@@ -28,20 +29,20 @@ function register(){
 	$password_1  =  e($_POST['password_1']);
     $password_2  =  e($_POST['password_2']);
 
-    
-    if (empty($username)) { 
-		array_push($errors, "Username is required"); 
+
+    if (empty($username)) {
+		array_push($errors, "Username is required");
 	}
-	if (empty($email)) { 
-		array_push($errors, "Email is required"); 
+	if (empty($email)) {
+		array_push($errors, "Email is required");
 	}
-	if (empty($password_1)) { 
-		array_push($errors, "Password is required"); 
+	if (empty($password_1)) {
+		array_push($errors, "Password is required");
 	}
 	if ($password_1 != $password_2) {
 		array_push($errors, "The two passwords do not match");
     }
-    
+
     if(count($errors) == 0){
         $password = $password_1;
 
@@ -51,22 +52,22 @@ function register(){
                      values('$name','$creditCard','$address','$username','$email','$password','$user_type'  )";
             mysqli_query($db,$query);
             $SESSION['success'] = "New user Successfully Created!!";
-            header('location: admin/home.php');        
+            header('location: admin/home.php');
         }
         else{
 			$username_check = mysqli_query($db,"SELECT * from bookingagents where username='$username' or emailID='$email'");
 			if(mysqli_num_rows($username_check)>=1){
 				array_push($errors,"Username or Email Already Exists.");
 			}
-			else{	
+			else{
 				$query = "INSERT INTO bookingagents(name,creditCard,address,username,emailID,password,user_type)
 						values('$name','$creditCard','$address','$username','$email','$password','user'  )";
 				mysqli_query($db,$query);
 				$logged_in_user_id = mysqli_insert_id($db);
 				$_SESSION['user'] = getUserById($logged_in_user_id);
 				$SESSION['success'] = "You are now logged in";
-				header('location: welcome.php'); 
-			}	       
+				header('location: welcome.php');
+			}
         }
     }
 
@@ -164,7 +165,7 @@ function login(){
 
 				$_SESSION['user'] = $logged_in_user;
 				$_SESSION['success']  = "You are now logged in";
-				header('location: admin/home.php');		  
+				header('location: admin/home.php');
 			}else{
 				$_SESSION['user'] = $logged_in_user;
 				$_SESSION['success']  = "You are now logged in";
@@ -210,9 +211,9 @@ function insert_train(){
 	$res = mysqli_query($db,'Select @result');
 	$output = mysqli_fetch_assoc($res);
 
-	$ans = $output['@result']; 
+	$ans = $output['@result'];
 	if($ans!=0){
-		array_push($success,"Train Successfully Inserted");		
+		array_push($success,"Train Successfully Inserted");
 	}
 	else{
 		array_push($errors,"Train with Given Number Already Exists");
@@ -250,11 +251,11 @@ function schedule_train(){
 	$res = mysqli_query($db,'Select @result');
 	$output = mysqli_fetch_assoc($res);
 
-	$ans = $output['@result']; 
+	$ans = $output['@result'];
 	if($ans==1){
 		$ticket = "ticket";
 		$table_name = $ticket.$trainno.$doj1;
-		$sql = "CREATE Table $table_name ( 
+		$sql = "CREATE Table $table_name (
 				`pnr` varchar(30) NOT NULL,
 				`trainNo` int(11) NOT NULL,
 				`doj` date NOT NULL,
@@ -266,8 +267,8 @@ function schedule_train(){
 				`gender` varchar(7) NOT NULL,
 				PRIMARY KEY( `berth no`, `coach no`)
 			)";
-		mysqli_query($db,$sql);	
-		array_push($success,"Train Scheduled Successfully");	
+		mysqli_query($db,$sql);
+		array_push($success,"Train Scheduled Successfully");
 	}
 	elseif($ans==0){
 		array_push($errors,"Train with Given Number Does Not Exists");
@@ -300,13 +301,35 @@ function show_tickets(){
 	}
 	else{
 		array_push($errors,"Not Available");
-	}	
+	}
 }
 
 if(isset($_POST['check_availability_btn'])){
 	check_availibility();
 }
+if(isset($_POST['update_btn'])){
+    update();
+//    $query="UPDATE Bookingagents SET name=$name,address=$address,email=$email where username=$username";
+}
+function update(){
+    global $db,$errors,$username,$email;
+    $name = e($_POST['name']);
+    $address = e($_POST['address']);
+    $username    =  e($_POST['username']);
+	$email       =  e($_POST['email']);
+	if (empty($email)) {
+		array_push($errors, "Email is required");
+	}
+    if(count($errors) == 0){
+        $query = "UPDATE bookingagents SET name='$name',address='$address',emailID='$email' where username='$username'";
+        mysqli_query($db,$query);
+        $logged_in_user_id = mysqli_insert_id($db);
+//        $_SESSION['user'] = getUserById($logged_in_user_id);
+        $SESSION['success'] = "You are now logged in";
+        header('location: welcome.php');
+    }
 
+}
 
 
 function check_availibility(){
