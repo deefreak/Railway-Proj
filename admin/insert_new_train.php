@@ -30,17 +30,25 @@ if (!isAdmin()) {
       </li>
       <li class="nav-item active">
         <a class="nav-link " href="insert_new_train.php">Insert a Train</a>
+	  </li>
+	  <li class="nav-item active">
+        <a class="nav-link " href="show_scheduled_trains.php">Scheduled Trains List</a>
       </li>
     </ul>
   </div>
 </nav>
+<style type="text/css">
+   body { background-image: url('https://images.unsplash.com/photo-1535535112387-56ffe8db21ff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80') !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+</style>
 <body>
 <div class="header">
 	<h2>Insert a new Train</h2>
 </div>
 <form method="post" action="insert_new_train.php">
 
-    <?php echo display_error(); ?>
+	<?php echo display_error(); 
+	?>
+	<?php echo display_success();?>
     <div class="input-group">
 		<label>Train Number</label>
 		<input type="text" name="trainno" value="">
@@ -60,40 +68,5 @@ if (!isAdmin()) {
 	</p>
 </form>
 </body>
-<body>
-<div align="CENTER">
-<h2> List of all Trains </h2>
-</div>
-<?php
-$query = "SELECT * from trains";
-$result = mysqli_query($db,$query);
-echo "<table class='table table-striped'>
-<thead class='thead-dark'>
-<tr>
-<th scope='col'>Train_Id</th>
-<th scope='col'>Train_Number</th>
-<th scope='col'>Train_Name</th>
-</tr>
-</thead>
-<tbody>";
 
-
-while($row = mysqli_fetch_array($result)){
-	echo "
-	<tr >	
-	<td>".$row[0]."</td>
-	<td>".$row[1]."</td>
-	<td>".$row[2]."</td>
-	</tr>
-
-	";
-}
-
-echo "</tbody>
-</table>";
-
-
-?>
-</div>
-</body>
 </html>

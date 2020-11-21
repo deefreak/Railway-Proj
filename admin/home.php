@@ -46,6 +46,9 @@ if (isset($_GET['logout'])) {
       </li>
       <li class="nav-item active">
         <a class="nav-link " href="insert_new_train.php">Insert a Train</a>
+	  </li>
+	  <li class="nav-item active">
+        <a class="nav-link " href="show_scheduled_trains.php">Scheduled Trains List</a>
       </li>
     </ul>
   </div>

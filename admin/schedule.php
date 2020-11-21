@@ -30,6 +30,9 @@ if (!isAdmin()) {
       </li>
       <li class="nav-item active">
         <a class="nav-link " href="insert_new_train.php">Insert a Train</a>
+	  </li>
+	  <li class="nav-item active">
+        <a class="nav-link " href="show_scheduled_trains.php">Scheduled Trains List</a>
       </li>
     </ul>
   </div>
@@ -44,7 +47,7 @@ if (!isAdmin()) {
 </div>
 <form method="post" action="schedule.php">
     <?php echo display_error(); ?>
-
+	<?php echo display_success(); ?>
 	<?php if (isset($_SESSION['success'])) : ?>
 			<div class="error success" >
 				<h3>

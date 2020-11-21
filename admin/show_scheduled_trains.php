@@ -24,6 +24,8 @@ echo "<table class='table table-striped'>
 <th scope='col'>Train_Number</th>
 <th scope='col'>Train_Name</th>
 <th scope='col'>Date Of Journey</th>
+<th scope='col'>AC Coaches</th>
+<th scope='col'>SL Coaches</th>
 <th scope='col'>AC Seats Left</th>
 <th scope='col'>Sleeper Seats Left</th>
 </tr>
@@ -38,6 +40,8 @@ while($row = mysqli_fetch_array($result)){
     <td>".$row[1]."</td>
     <td>".$row[3]."</td>
     <td>".$row[4]."</td>
+    <td>".$row[5]."</td>
+    <td>".$row[6]."</td>
 	</tr>";
 }
 
