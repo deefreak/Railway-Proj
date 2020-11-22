@@ -14,6 +14,7 @@ $creditcard = "";
 $errors   = array();
 $errors1  = array();
 $success = array();
+$errors2 = array();
 
 if(isset($_POST['register_btn'])){
     register();
@@ -491,6 +492,17 @@ function book_ticket(){
 	}
 }
 
+function display_error2(){
+    global $errors2;
+    if (count($errors2) > 0){
+		echo '<div class="error">';
+			foreach ($errors2 as $error){
+				echo $error .'<br>';
+			}
+		echo '</div>';
+	}
+}
+
 if(isset($_POST['see_train_btn'])){
 	see_train();
 }
@@ -514,6 +526,25 @@ function see_train(){
         else{
 		  array_push($errors,"Train Not Available");
         }
+	}
+}
+
+if(isset($_POST['see_train_by_date_btn'])){
+	see_train_by_date();
+}
+
+function see_train_by_date(){
+	global $db,$errors2;
+	$doj = date('Y-m-d',strtotime($_POST['date']));
+	$sql = "SELECT * from trainsavailable where doj = '$doj' ";
+	$result = mysqli_query($db,$sql);
+
+	if(mysqli_num_rows($result) != 0){
+		$_SESSION['doj'] = $doj;
+		header('location: see_train_by_date.php');
+	}
+	else{
+		array_push($errors2,"No Train Available on this date");
 	}
 }
 
