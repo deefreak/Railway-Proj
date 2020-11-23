@@ -56,7 +56,7 @@ $doj = $_SESSION['doj1'];
 
 <?php
 
-$query = "SELECT * from  $ticket_table_name ";
+$query = "SELECT * from  $ticket_table_name order by pnr ";
 $result = mysqli_query($db,$query);
 
 echo "<table class='table table-striped'>
@@ -88,7 +88,7 @@ while($row = mysqli_fetch_array($result)){
 
 echo "</tbody>
 </table>";
-echo "<br><a href='home.php'>Back to Admin Page</a><br> ";
+echo "<br><a href='http://localhost/proj1/admin/home.php'>Back to Admin Page</a><br> ";
 
 ?>
 </body>

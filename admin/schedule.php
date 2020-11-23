@@ -33,6 +33,9 @@ if (!isAdmin()) {
 	  </li>
 	  <li class="nav-item active">
         <a class="nav-link " href="show_scheduled_trains.php">Scheduled Trains List</a>
+	  </li>
+	  <li class="nav-item active">
+	  <a class="nav-link" href="home.php?logout='1'" style="color: red;">logout</a>
       </li>
     </ul>
   </div>
@@ -60,12 +63,12 @@ if (!isAdmin()) {
 	<?php endif ?>
     <div class="input-group">
 		<label>Train Number</label>
-		<input type="number" name="trainno" value="" required>
+		<input type="text" name="trainno" value="">
 	</div>
     
 	<div class="input-group">
 		<label>Date of Journey</label>
-		<input type="date" name="date" value="" required>
+		<input type="date" name="date" value="">
 	</div>
 	<div class="input-group">
 		<label>Number of AC Coaches</label>

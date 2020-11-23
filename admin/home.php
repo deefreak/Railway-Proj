@@ -49,6 +49,9 @@ if (isset($_GET['logout'])) {
 	  </li>
 	  <li class="nav-item active">
         <a class="nav-link " href="show_scheduled_trains.php">Scheduled Trains List</a>
+	  </li>
+	  <li class="nav-item active">
+	  <a class="nav-link" href="home.php?logout='1'" style="color: red;">logout</a>
       </li>
     </ul>
   </div>
@@ -89,11 +92,11 @@ if (isset($_GET['logout'])) {
 		</div>
 		<div align="CENTER" >
 			<div>
-			<h2 style="font-style: italic;"><br><a href="schedule.php">Schedule Trains</a><br>
-			<br><a href="show_users.php">Show all Booking Agents</a><br>
-			<br><a href="insert_new_train.php">Insert a new train</a><br>
-			<br><a href="../show_trains.php">Show Trains</a><br>
-			<br><a href="show_booked_tickets.php">Show Booked Tickets</a><br>
+			<h2 style="font-style: italic;"><br><a href="http://localhost/proj1/admin/schedule.php">Schedule Trains</a><br>
+			<br><a href="http://localhost/proj1/admin/show_users.php">Show all Booking Agents</a><br>
+			<br><a href="http://localhost/proj1/admin/insert_new_train.php">Insert a new train</a><br>
+			<br><a href="http://localhost/proj1/show_trains.php">Show Trains</a><br>
+			<br><a href="http://localhost/proj1/admin/show_booked_tickets.php">Show Booked Tickets</a><br>
 			</h2>
 			</div>
 		</div>	

@@ -35,6 +35,9 @@
 	  <li class="nav-item active">
         <a class="nav-link " href="show_scheduled_trains.php">Scheduled Trains List</a>
       </li>
+      <li class="nav-item active">
+	  <a class="nav-link" href="home.php?logout='1'" style="color: red;">logout</a>
+      </li>
     </ul>
   </div>
 </nav>

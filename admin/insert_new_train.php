@@ -33,6 +33,9 @@ if (!isAdmin()) {
 	  </li>
 	  <li class="nav-item active">
         <a class="nav-link " href="show_scheduled_trains.php">Scheduled Trains List</a>
+	  </li>
+	  <li class="nav-item active">
+	  <a class="nav-link" href="home.php?logout='1'" style="color: red;">logout</a>
       </li>
     </ul>
   </div>
@@ -51,7 +54,7 @@ if (!isAdmin()) {
 	<?php echo display_success();?>
     <div class="input-group">
 		<label>Train Number</label>
-		<input type="number" name="trainno" value="">
+		<input type="text" name="trainno" value="">
 	</div>
     <div class="input-group">
 		<label>Train Name</label>
