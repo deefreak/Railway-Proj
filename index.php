@@ -23,11 +23,12 @@ Released   : 20081009
 <body>
    <div id="page">
        <div class="topNaviagationLink" ><a href="index.php">Home</a></div>
-       <div class="topNaviagationLink"><a href="login.php">About</a></div>
+       <div class="topNaviagationLink"><a href="admin/show_scheduled_trains.php">Train List</a></div>
        <div class="topNaviagationLink"><a href="login.php">User Login</a></div>
        <div class="topNaviagationLink"><a href="register.php">Register</a></div>
        <div class="topNaviagationLink"><a href="login.php">Admin Login</a></div>
        <div class="topNaviagationLink"><a href="contact.php">Contact Us!</a></div>
+       <!--<div class="topNaviagationLink"><a href="admin/show_scheduled_trains.php">Show All Trains</a></div>-->
      <!-- <div class="topNaviagationLink"><a href="index.html">Contact</a></div> -->
  </div>
    <div id="mainPicture">

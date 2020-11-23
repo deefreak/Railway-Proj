@@ -35,7 +35,8 @@
 	<h2>Ticket with PNR Number <?php echo $pnr;?> </h2>
 </div>
 <?php
-$query = "SELECT * from bookinghistory where pnr = '$pnr'";
+$username = $_SESSION['user']['username'];
+$query = "SELECT * from bookinghistory where pnr = '$pnr' and username='$username' ";
 $result = mysqli_query($db,$query);
 
 if(mysqli_num_rows($result) == 1){

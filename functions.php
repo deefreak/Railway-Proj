@@ -2,8 +2,8 @@
 session_start();
 
 // connect to database
-//$db = mysqli_connect('localhost', 'root', 'deepak', 'railwayproj');
-$db = mysqli_connect('localhost', 'Tanmay', '7376748947', 'reservation');
+$db = mysqli_connect('localhost', 'root', 'deepak', 'railwayproj');
+//$db = mysqli_connect('localhost', 'T', '7376748947', 'reservation');
 
 // variable declaration
 $username = "";
@@ -64,8 +64,8 @@ function register(){
 				$query = "INSERT INTO bookingagents(name,creditCard,address,username,emailID,password,user_type)
 						values('$name','$creditCard','$address','$username','$email','$password','user'  )";
 				mysqli_query($db,$query);
-				$logged_in_user_id = mysqli_insert_id($db);
-				$_SESSION['user'] = getUserById($logged_in_user_id);
+				//$logged_in_user_id = mysqli_insert_id($db);
+				//$_SESSION['user'] = getUserById($logged_in_user_id);
 				$SESSION['success'] = "You are now logged in";
 				header('location: welcome.php');
 			}
@@ -479,14 +479,14 @@ function book_ticket(){
 			$sql2 = "UPDATE trainsavailable set SlSeatsLeft = SlSeatsLeft - '$no_of_pass' where trainno='$train_number' and doj='$doj' ";
 			mysqli_query($db,$sql2);
 		}
+		$sql = "INSERT into bookinghistory values('$username','$train_number','$train_name','$doj','$pnr')";
+		mysqli_query($db,$sql);
 		for($i=0;$i<$no_of_pass;$i++){
 			$sql = "INSERT into $ticket_table_name Values('$pnr','$train_number','$doj','$passenger_name[$i]','$berth_no[$i]','$berth_type[$i]',
 					'$coach[$i]','$passenger_age[$i]','$passenger_gender[$i]')";
 			mysqli_query($db,$sql);
 
 		}
-		$sql = "INSERT into bookinghistory values('$username','$train_number','$train_name','$doj','$pnr')";
-		mysqli_query($db,$sql);
 		unset($_SESSION['train_number']);
 		array_push($success,"Ticket Booked Successfully");
 	}
